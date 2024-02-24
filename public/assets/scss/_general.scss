@@ -1,0 +1,248 @@
+#ld-main-header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+    padding: 25px 0;
+    &:not(.uk-background-secondary) {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.502), rgba(0, 0, 0, 0.278), transparent);
+    }
+    
+    #ld-main-logo {
+        display: block;
+        width: 240px;
+    }
+
+
+
+        
+    .uk-button {
+        
+        &.uk-button-default {
+            border: 1px solid white;
+            color: white;    
+            &:hover {
+                border: 1px solid white;
+                color: white;
+            }
+        }
+    }
+}
+
+
+.uk-button {border-radius: 50px;}
+
+
+.ld-hero {
+    height: 85vh;
+    background-size: cover;
+
+    .ld-color-layer {display: none;}
+    
+    @media screen and (max-width: 980px) {
+        height: 100vh;    
+    }
+    
+    position: relative;
+    img.ld-banner-main-artwork {
+        width: 100%;
+        display: block;
+        pointer-events: none;
+        bottom: 0;
+    }
+}
+
+
+.ld-admin-editable-button {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    z-index: 9;
+}
+
+
+.ld-set-editable-icon {
+    position: relative;
+}
+
+
+.ld-color-layer {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #3f0000d6, #0900ff17);
+
+    &::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: url(../../assets/images/dot.png) repeat;
+        background-size: 2px;
+        opacity: .5;
+    }
+}
+
+
+
+
+// Sections
+.lg-section-semi-color {
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 60%;
+        width: 50vw;
+        background: #F2F4F8;
+        z-index: 0;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        
+        @media screen and (max-width: 980px) {
+            display: none;
+        }
+    }
+}
+
+
+
+// Accordion
+.uk-accordion {
+    li {
+        a.uk-accordion-title {
+            background-color: #f2f4f8;
+            padding: 20px 30px;
+            border-radius: 5px;
+        }
+    }
+}
+
+
+
+// slider
+.ld-logo-slider {
+    .uk-slider-items {
+        a {
+            padding: 25px;
+            background-color: white;
+            img {
+                margin: auto;
+                display: block;
+                width: auto;
+                height: 55px;
+            }
+        }
+    }
+}
+
+
+
+// Social buttons
+.ld-socils {
+    a {
+        margin-right: 10px;
+        
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+
+
+
+.uk-card {
+    &.stroke-top {
+        border-top: 5px solid #d8dee9;
+    }
+}
+
+
+
+
+// Paralax container
+#ld-paralax-section {
+    min-height: 200px;
+    
+    .ld-parallax-content {
+        padding: 35px 0;
+    }
+}
+
+
+
+.spread {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+
+
+.ld-editable-editor-wrapper {
+    z-index: 99 !important;
+}
+
+
+.min-height {
+    min-height: 600px;
+}
+
+
+
+
+
+// Offcanvas save button
+#ld-offcanvas-save-settings {
+    background-color: #249128 !important;
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+
+.uk-offcanvas-container {
+    position: initial !important;
+}
+
+
+.ld-element-manage {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5e9ce5;
+    color: white;
+    border-radius: 3px;
+    z-index: 999;
+    position: relative;
+    
+    &:hover {
+        color: white;
+    }
+    &:focus {
+        color: white;
+    }
+    &:active {
+        color: white;
+    }
+}
+
+
+
+#offcanvas-reveal {
+    z-index: 1000;
+}

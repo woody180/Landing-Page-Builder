@@ -1,0 +1,535 @@
+<?php
+
+require_once __DIR__ . '/app/Engine/Helpers/engineToolHelpers.php';
+require_once __DIR__ . '/app/Engine/Helpers/engineUrlHelpers.php';
+require_once __DIR__ . '/app/Config/urls.php';
+require_once __DIR__ . '/app/Config/database.php';
+require_once __DIR__ . '/app/Engine/Libraries/rb.php';
+require_once __DIR__ . '/app/Engine/Database/Initialization.php';
+require_once __DIR__ . '/app/Engine/Database/Connection.php';
+
+class Cli {
+
+    private static $command_array = NULL;
+    private static $messages;
+    protected static $argv;
+
+    public static function construct($argv) {
+        self::$argv = $argv;
+        
+        if (isset($argv[1]) && $argv[1]==='serve')
+        {
+            $hostArrHttp = explode('//', URLROOT);
+            $host = $hostArrHttp[1] ?? $hostArrHttp[0];
+            $port = explode(':', $host)[1] ?? die("Port missing in Config/urls.php where 'URLROOT' is declared");
+            $host = explode(':', $host)[0];
+            
+            if (!shell_exec("php -S {$host}:{$port} -t public/")) die("Server failed on {$host}:{$port}");
+        }
+            
+
+        self::$messages = "😤 try \n ➡  php cli make:controllers blog something \n ➡  php cli make:routes blog post \n ➡  php cli make:restful blog";
+
+        if ( isset($argv[1]) ) {
+            if (preg_match('/:/', $argv[1])) {
+
+                $argv_split = explode(':', $argv[1]);
+
+                if (!isset($argv[2])) die(self::$messages);
+                
+                call_user_func(['Cli', $argv_split[0]], $argv_split[1], $argv[2], $argv[3] ?? '', $argv[4] ?? '');
+            }
+        } else {
+            echo self::$messages;
+        }
+    }
+    
+    
+    
+    // Clear cached views
+    private static function cache($arg) {
+        $lastSegment = strtolower(self::$argv[2]);
+        
+        if ($lastSegment === 'all') {
+            array_map('unlink', array_filter((array) glob(APPROOT . "/Cache/*.txt")));
+            echo "All cached files cleared successfully.";
+        } else {
+            array_map('unlink', array_filter((array) glob(APPROOT . "/Cache/{$lastSegment}_*.txt")));
+            echo "files under key - {$lastSegment} cleared successfully.";
+        }
+        
+    }
+
+
+
+
+    // Create language list
+    private static function language($arg, $name = null, $suffix = null, $isActive = null) {
+
+        $path = APPROOT . "/Engine/Language_base/languages.json";
+  
+        // Set languages
+        if ($arg === 'set') {
+
+            if (!$name) die("😤 Provide language name like - 'php cli language:set georgian ge' \n");
+            if (!$suffix) die("😤 Provide language code like - 'php cli language:set georgian ge' \n");
+        
+            $langList = [];
+            if (file_exists($path)) {
+                $langList = file_get_contents($path);
+                $langList = json_decode($langList, true);
+            }
+
+            // Check if language already stored
+            foreach($langList as $lg) {
+                if ($lg['code'] === $suffix) 
+                    die("- Language is already stored \n");
+            }
+
+            // If one more active lang
+            foreach($langList as $i => $lg) {
+                if ($lg['primary'] === true && $isActive)
+                    $langList[$i]['primary'] = null;
+            }
+            
+            $langList[] = [
+                'language' => strtolower($name),
+                'code' => strtolower($suffix),
+                'primary' => $isActive == '--primary' ? TRUE : null
+            ];
+    
+            file_put_contents(APPROOT . "/Engine/Language_base/languages.json", json_encode($langList));
+            
+            die("✔️ $name - stored succesfully. \n");
+        }
+
+
+
+        // Get languages list
+        if ($arg === 'get') {
+
+            if (!file_exists($path)) die("Language list not found. \n");
+
+            $data = file_get_contents($path);
+            die($data . "\n");
+        }
+
+
+        // Delete landuage
+        if ($arg === 'delete') {
+
+            $langList = file_get_contents($path);
+            $langList = json_decode($langList, true);
+            $lang = null;
+
+            foreach ($langList as $i => $ll) {
+
+                if ($ll['code'] == $name) {
+                    
+                    $lang = $langList[$i]['language'];
+                    array_splice($langList, $i, 1);
+                    break;
+                }
+            }
+
+            file_put_contents(APPROOT . "/Engine/Language_base/languages.json", json_encode($langList));
+
+            die("✔️ {$lang} removed from language list \n");
+        }
+
+
+        // Make primary
+        if ($arg === 'primary') {
+
+            $langList = file_get_contents($path);
+            $langList = json_decode($langList, true);
+            $lang = null;
+
+            for ($i=0; $i < count($langList); $i++) { 
+                $langList[$i]['primary'] = null;
+            }
+
+
+            foreach ($langList as $i => $ll) {
+                if ($ll['code'] == $name) {
+                    $langList[$i]['primary'] = true;
+                    $lang = $langList[$i]['language'];
+                    break;
+                }
+            }
+
+            file_put_contents(APPROOT . "/Engine/Language_base/languages.json", json_encode($langList));
+
+            die("✔️ {$lang} is primary \n");
+        }
+
+
+        // Delete languages
+        if ($arg === 'refresh') {
+            file_put_contents(APPROOT . "/Engine/Language_base/languages.json", json_encode([]));
+            die("✔️ All languages are removed from list \n");
+        }
+
+
+        // Language list
+        if ($arg === 'list') {
+
+            $langList = file_get_contents($path);
+            $json_string = json_encode(json_decode($langList), JSON_PRETTY_PRINT);
+
+            print_r($json_string);
+            die("\n");
+        }
+        
+        
+        // Switch language
+        if ($arg === 'switch')
+        {
+            $langs = file_get_contents(APPROOT . "/Engine/Language_base/languages.json");
+            $langsArr = json_decode($langs);
+            
+            $languageCode = self::$argv[2] ?? null;
+            if (!$languageCode) die ("\n Provide language code \n");
+            
+            foreach ($langsArr as $la) {
+                if ($la->code === $languageCode) {
+                    $_SESSION['lang'] = $languageCode;
+                    die("\n language switched to - " . $languageCode);
+                }
+            }
+            
+            die("\n" . $languageCode . " - language code not detected");
+        }
+
+        
+    }
+
+
+    private static function make(string $fileType, string $fileName, string $param = null) {
+
+        $type = ucfirst($fileType);
+
+
+        // print_r($fileType . "\n");
+        // die;
+
+
+        // Create singleton pattern file
+        if ($fileType == "singleton") {
+            self::createSingleton(ucfirst($fileName));
+            die("✔ - Singleton file - \"{$fileName}\" created successfully. \n");
+        }
+
+
+        // If type is restful
+        if ($fileType === 'restful') {
+
+            // Make controller directory with controller files
+            self::restRoute($fileName);
+
+            // Make routes directory with route files
+                
+            self::restControllerClean($fileName);
+     
+            die("✔ - Restful Route and Conttoller were created \n");
+        }
+
+        
+        // Check dir
+        if (preg_match('/[\/]/', $fileName)) {
+
+            $directoryArray = explode('/', $fileName);
+            $index = array_key_last($directoryArray);
+            $fileName = $directoryArray[$index];
+            array_splice($directoryArray, $index, 1);
+            $type .= '/' . join('/', $directoryArray); // New url from type
+
+            // Construct path
+            $path = __DIR__ . "/app/{$type}";
+
+            if (!is_dir($path)) {
+
+                preg_replace('//', '', $path);
+
+                // Create file
+                mkdir($path, 0777, true);
+            }
+        }
+
+
+        if ($fileType === 'migration') {
+            self::migration($fileName);
+            die;
+        }
+        
+        
+        // Check suffixes
+        if ($fileType === 'controllers')    $suffix = 'Controller';
+        if ($fileType === 'routes')         $suffix = 'Route';
+        if ($fileType === 'models')         $suffix = 'Model_' . ucfirst($fileName);
+        
+
+        // Get file content
+        $boilerPlate = call_user_func(['Cli', ucfirst($fileType)], ucfirst($fileName), $type, $param);
+        if ($fileType === 'models') $fileName = '';
+
+        // Create file with content
+        file_put_contents(__DIR__ . "/app/{$type}/". ucfirst($fileName) . $suffix .".php", $boilerPlate);
+
+        echo "✔ - $fileName done! \n";
+    }
+
+
+
+    private static function createSingleton(string $singletonName) {
+        
+        if (is_dir(__DIR__ . "/app/Singleton")) {
+
+            $path = __DIR__ . "/app/Singleton/";
+            $filename = $path . $singletonName . '.php';
+
+            if (file_exists($filename)) die("😤 {$singletonName}.php - singleton file is already exists \n");
+
+            file_put_contents($path . $singletonName . '.php', "<?php
+
+namespace App\Singleton;
+            
+// Singleton class.
+class {$singletonName} {
+    // Hold the class instance.
+    private static \$instance = null;
+
+    // The constructor is private
+    // to prevent initiation with outer code.
+    private function __construct()
+    {
+        // The expensive process (e.g.,db connection) goes here.
+    }
+
+    // The object is created from within the class itself
+    // only if the class has no instance.
+    public static function getInstance()
+    {
+        if (self::\$instance == null)
+        {
+            self::\$instance = new {$singletonName}();
+        }
+
+        return self::\$instance;
+    }
+}
+            ");
+        }
+    }
+
+
+
+    private static function migration(string $migrationName) {
+
+        $modelName = ucfirst($migrationName);
+        $filePath = __DIR__ . "/app/Models/Model_{$modelName}.php";
+
+        if (!file_exists($filePath)) {
+            echo 'Migration not exists';
+            die;
+        }
+
+        $model = initModel($modelName);
+
+        $model->migrate();
+
+        echo "✔ Migration succeed from model - Model_$modelName";
+    }
+
+
+
+    // Boilerplate for models
+    private static function models(string $filename) {
+
+        return "<?php
+        
+class Model_$filename extends RedBean_SimpleModel {
+
+    public function open() {
+        
+    }
+
+    public function dispense() {
+        
+    }
+
+    public function update() {
+        
+    }
+
+    public function after_update() {
+        
+    }
+
+    public function delete() {
+        
+    }
+
+    public function after_delete() {
+        
+    }
+}";
+    }
+
+
+
+    // Boilerplate for routes
+    private static function routes($fileName, $type, $param) {
+
+        if (!$param) $param = 'get';
+
+        return "<?php
+
+use App\Engine\Libraries\Router;
+
+
+\$router = Router::getInstance();
+
+\$router->{$param}('". strtolower($fileName) ."', function(\$req, \$res) {
+   
+});
+        ";
+    }
+
+
+    // BloilerPlate for controller
+    private static function controllers($fileName, $type, $param = null) {
+
+        $param = !$param ? $fileName : $param;
+        $type = str_replace('/', '\\', $type);
+
+return "<?php namespace App\\$type;
+
+
+
+class {$fileName}Controller {
+    
+    public function index(\$req, \$res) {
+       
+    }
+}
+        ";
+    }
+
+
+
+
+    private static function restRoute(string $routeName) {
+
+        $routeNameArr = explode('/', $routeName);
+        
+        $lastIndex = array_key_last($routeNameArr);
+        $filename = end($routeNameArr);
+        array_splice($routeNameArr, $lastIndex, 1);
+        $halfPath = join('/', $routeNameArr);
+        $pathToController = "{$halfPath}/{$filename}";
+        $path = __DIR__ . "/app/Routes/" .$halfPath;
+
+        if (preg_match('/^[\/](.+)/', $pathToController, $match))
+            $pathToController = $match[1];
+        
+        // Make directory
+        if (!is_dir($path))
+            mkdir($path, 0777, true);
+        
+
+        // Create file with content
+        file_put_contents("{$path}/{$filename}Route.php", '<?php
+
+use App\Engine\Libraries\Router;
+
+
+$router = Router::getInstance();
+
+$router->get(\''.strtolower($pathToController).'/new\',                \''.ucfirst($pathToController).'Controller@new\');
+$router->post(\''.strtolower($pathToController).'\',                   \''.ucfirst($pathToController).'Controller@create\');
+$router->get(\''.strtolower($pathToController).'\',                    \''.ucfirst($pathToController).'Controller@index\');
+$router->get(\''.strtolower($pathToController).'/(:segment)\',         \''.ucfirst($pathToController).'Controller@show\');
+$router->get(\''.strtolower($pathToController).'/(:segment)/edit\',    \''.ucfirst($pathToController).'Controller@edit\');
+$router->put(\''.strtolower($pathToController).'/(:segment)\',         \''.ucfirst($pathToController).'Controller@update\');
+$router->patch(\''.strtolower($pathToController).'/(:segment)\',       \''.ucfirst($pathToController).'Controller@update\');
+$router->delete(\''.strtolower($pathToController).'/(:segment)\',      \''.ucfirst($pathToController).'Controller@delete\');
+        ');
+    }
+
+
+
+    private static function restControllerClean(string $controllerName) {
+
+        $controllerNameArr = explode('/', $controllerName);
+        $count = count($controllerNameArr) + 1;
+        $lastIndex = array_key_last($controllerNameArr);
+        $filename = end($controllerNameArr);
+
+        array_splice($controllerNameArr, $lastIndex, 1);
+        $halfPath = join('/', $controllerNameArr);
+        $path = __DIR__ . "/app/Controllers/" . $halfPath;
+
+        // Make directory
+        if (!is_dir($path))
+            mkdir($path, 0777, true);
+
+        $namespace = !empty($halfPath) ? "Controllers/{$halfPath}" : "Controllers";
+        $namespace = str_replace('/', '\\', $namespace);
+
+        file_put_contents("{$path}/{$filename}Controller.php", '<?php namespace App\\'.$namespace.';
+
+
+
+class '.$filename.'Controller {
+    
+    // Add new view
+    public function new($req, $res) {
+        
+    }
+
+
+    // Create view
+    public function create($req, $res) {
+       
+    }
+
+
+    // All items
+    public function index($req, $res) {
+       
+    }
+
+
+    // Show view
+    public function show($req, $res) {
+        $id = $req->getSegment('.$count.');
+    }
+
+
+    // Edit view
+    public function edit($req, $res) {
+        $id = $req->getSegment('.$count.');
+    }
+
+
+    // Update
+    public function update($req, $res) {
+        $id = $req->getSegment('.$count.');
+    }
+
+
+    // Delete
+    public function delete($req, $res) {
+        $id = $req->getSegment('.$count.');
+    }
+
+}
+        ');
+    }
+
+
+}
+
+
+Cli::construct($argv);

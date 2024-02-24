@@ -1,0 +1,136 @@
+// Media screens
+$xl-screen: 1600px;
+$l-screen: 1200px;
+$m-screen: 960px;
+$s-screen: 640px;
+
+@mixin xlScreen {
+    @media (min-width: $xl-screen) {
+        @content;
+    }
+}
+
+@mixin lScreen {
+    @media (min-width: $l-screen) {
+        @content;
+    }
+}
+
+@mixin mScreen {
+    @media (min-width: $m-screen) {
+        @content;
+    }
+}
+
+@mixin sScreen {
+    @media (min-width: $s-screen) {
+        @content;
+    }
+}
+
+
+
+
+
+@include xlScreen {
+    .uk-padding-remove\@xl {
+        padding: 0;
+    }
+
+    // Flex 
+    .uk-flex\@xl {
+        display: flex;
+    }
+
+    .uk-flex-between\@xl {
+        justify-content: space-between;
+    }
+
+
+    // Height
+    .uk-height-1-1\@xl {
+        height: 100%;
+    }
+
+
+    // Padding
+    .uk-padding\@xl {
+        padding: inherit;
+    }
+}
+
+@include lScreen {
+    .uk-padding-remove\@l {
+        padding: 0;
+    }
+
+    // Flex 
+    .uk-flex\@l {
+        display: flex;
+    }
+
+    .uk-flex-between\@l {
+        justify-content: space-between;
+    }
+
+    // Height
+    .uk-height-1-1\@l {
+        height: 100%;
+    }
+
+    // Padding
+    .uk-padding\@l {
+        padding: inherit;
+    }
+}
+
+@include mScreen {
+    .uk-padding-remove\@m {
+        padding: 0;
+    }
+
+    // Flex 
+    .uk-flex\@m {
+        display: flex;
+    }
+
+    .uk-flex-between\@m {
+        justify-content: space-between;
+    }
+
+    // Height
+    .uk-height-1-1\@m {
+        height: 100%;
+    }
+
+    // Padding
+    .uk-padding\@m {
+        padding: inherit;
+    }
+}
+
+@include sScreen {
+    .uk-padding-remove\@s {
+        padding: 0;
+    }
+
+    // Flex 
+    .uk-flex\@s {
+        display: flex;
+    }
+
+    .uk-flex-between\@s {
+        justify-content: space-between;
+    }
+
+    // Height
+    .uk-height-1-1\@s {
+        height: 100%;
+    }
+
+    // Padding
+    .uk-padding\@s {
+        padding: inherit;
+    }
+}
+

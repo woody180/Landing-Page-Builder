@@ -1,0 +1,12 @@
+#account-buttons-set {
+    @media screen and (max-width: $m-screen) {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    button {
+        @media screen and (max-width: $m-screen) {
+            margin-bottom: 20px;
+        }
+    }
+}
