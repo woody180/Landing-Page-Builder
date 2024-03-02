@@ -1,4 +1,4 @@
-<?php $this->layout('partials/template', ['title' => $title, 'theme' => 'uk-background-secondary']) ?>
+<?php $this->layout('layouts/template', ['title' => $title, 'theme' => 'uk-background-secondary']) ?>
 
 <?= $this->start('mainSection') ?>
     
