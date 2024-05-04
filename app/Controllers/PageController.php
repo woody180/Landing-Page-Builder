@@ -41,14 +41,17 @@ class PageController {
 
 
     // Show view
-    public function show($req, $res) {
+    public function show($req, $res)
+    {
+        helpers(['sectionDecoder']);
         
         $url = $req->getSegment(2);
         $pageModel = initModel('pages');
         $page = $pageModel->find($url);
         $section = initModel('section')->getSectionByName("footer");
+        $decodedBodies = (array) sectionDecoder([$section]);
         $obj = new stdClass();
-        $obj->footer = $section;
+        $obj->footer = reset($decodedBodies);
 
         return $res->render('page', [
             'page' => $page,
