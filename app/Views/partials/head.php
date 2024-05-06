@@ -8,6 +8,7 @@
     <meta name="checkauth" content="<?= checkAuth([1]) ? 'true' : 'false' ?>">
     <meta name="description" content="<?= initModel('settings')->getSettings('description') ?>">
     <meta name="keywords" content="<?= initModel('settings')->getSettings('keywords') ?>">
+    <meta id="meta-location" property="og:url" content="<?= urlSegments('last', true) ?? '/' ?>" />
     
     <script src="<?= assetsUrl('js/uikit.min.js') ?>"></script>
     <script src="<?= assetsUrl('js/uikit-icons.min.js') ?>"></script>
