@@ -1,3 +1,4 @@
+<?php if (property_exists($section, 'faq') && $section->faq->show): ?>
 <ul uk-accordion>
     <?php foreach ($section->faq->body->items as $faq): ?>
     <li class="<?= $faq->open ? 'uk-open' : ''?>">
@@ -8,3 +9,4 @@
     </li>
     <?php endforeach; ?>
 </ul>
+<?php endif; ?>
