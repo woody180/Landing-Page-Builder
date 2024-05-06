@@ -107,8 +107,10 @@ export default class Slider extends SketchEngine {
         openModal(e)
         {
             e.preventDefault();
+
+            const pageurl = document.getElementById('meta-location').getAttribute('content');
             
-            fetch(this.variables.baseurl + '/load-editable-element/slider', {
+            fetch(this.variables.baseurl + `/load-editable-element/slider?pageurl=${pageurl}`, {
                 method: 'get',
                 headers: {
                   'Content-Type': 'application/json',

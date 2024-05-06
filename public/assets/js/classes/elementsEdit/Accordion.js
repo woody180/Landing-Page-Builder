@@ -80,7 +80,9 @@ export default class Accordion extends SketchEngine {
         {
             e.preventDefault();
             
-            fetch(this.variables.baseurl + '/load-editable-element/accordion', {
+            const pageurl = document.getElementById('meta-location').getAttribute('content');
+
+            fetch(this.variables.baseurl + `/load-editable-element/accordion?pageurl=${pageurl}`, {
                 method: 'get',
                 headers: {
                   'Content-Type': 'application/json',
