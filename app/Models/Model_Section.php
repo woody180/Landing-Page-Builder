@@ -36,7 +36,7 @@ class Model_Section extends RedBean_SimpleModel {
 
     
     
-    public function getSection($pageID, $id, $json = TRUE)
+    public function getSection($id, $json = TRUE)
     {
         $data = null;
         if (is_numeric($id)) {
@@ -48,6 +48,26 @@ class Model_Section extends RedBean_SimpleModel {
         if ($json) return json_decode($data->body);
         return $data;
     }
+
+
+    public function getPageRelatedElement($pageID, $id, $json = TRUE)
+    {
+        $data = null;
+        if (is_numeric($id)) {
+            $page = R::findOne('page', 'url = ?', [$pageID]) ?? abort(["code" => 404, "text" => "section can't be found"]);
+            $data = $page->with('section.title = ?', [$id])->sharedSection;
+        } else {
+            $page = R::findOne('page', 'id = ?', [$pageID]) ?? abort(["code" => 404, "text" => "section can't be found"]);
+            $data = $page->with('section.title = ?', [$id])->sharedSection;
+        }
+
+        if (!is_null($data) && !empty($data)) $data = reset($data);
+
+        if ($json) return json_decode($data->body);
+        return $data;
+    }
+
+
     
 
     public function getSectionElement($pageID, $sectionID, $alias)
