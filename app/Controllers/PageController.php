@@ -48,14 +48,13 @@ class PageController {
         $url = $req->getSegment(2);
         $pageModel = initModel('pages');
         $page = $pageModel->find($url);
-        $section = initModel('section')->getSectionByName("footer");
-        $decodedBodies = (array) sectionDecoder([$section]);
-        $obj = new stdClass();
-        $obj->footer = reset($decodedBodies);
+
+        $sections = initModel('section')->getSections($page->id);
+        $decodedBodies = sectionDecoder($sections);
 
         return $res->render('page', [
             'page' => $page,
-            'section' => $obj
+            'section' => $decodedBodies
         ]);
     }
 
