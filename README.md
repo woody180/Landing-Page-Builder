@@ -68,3 +68,22 @@ In the example below, there are few attributes. In the **data-background-color**
     </div>
 </section>
 ```
+# Create page
+It is possible to create unlimited pages from the left menu. You can create, read, update, and delete pages. It's also possible to add different layouts to pages.
+
+# Add section to another page
+In some cases, you might want to add sections like a footer or gallery to the page.
+
+If a section has not been created yet, you must go to the section table and add your own section.
+
+There is a junction table in the database, so in order to add sections to the page, you must join them into the database ```page_section``` table by adding the page id and section id.
+
+Let's say we created a slideshow section in the section table of the database. We need to insert this section into the page view. First of all, we move into the ```page_section``` table and insert the page ID and section ID into it. After we move into the page view and add the following lines:
+
+```
+<!-- heck if section ID exists in the junction (join) table and if the section row called 'show' value is - 1. -->
+
+<?php if (property_exists($section, 'gallery') && $section->gallery->show): ?>
+    <?= $this->insert('partials/gallery', ['section' => $section]) ?>
+<?php endif; ?>
+```
