@@ -299,7 +299,7 @@
 
 
 <?= $this->start('footer') ?>
-    <?php if ($section->footer->show): ?>
+    <?php if (property_exists($section, 'footer') && $section->footer->show): ?>
         <?= $this->insert('partials/footer', ['section' => $section]) ?>
     <?php endif; ?>
 <?= $this->stop(); ?>
