@@ -246,13 +246,14 @@ export default class SectionsController extends SketchEngine {
             const button = e.target.closest(this.selectors.adminEdtiButton);
             const section = button.closest(this.selectors.section);
             const sectionID = section.getAttribute('data-section-id');
+            const pageurl = document.getElementById('meta-location').getAttribute('content');
 
             this.variables.section = section;
             this.variables.sectionID = sectionID;
             this.variables.elementPath = section.getAttribute('data-element-path') ?? undefined;
             
             if (!this.variables.elementPath) {
-                fetch(`${this.variables.baseurl}/section/${sectionID}`, {
+                fetch(`${this.variables.baseurl}/section/${sectionID}?pageurl=${pageurl}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
