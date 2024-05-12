@@ -39,7 +39,7 @@ class SectionController {
             $alias = query('elpath');
             return $res->send($model->getSectionElement($page->id, $id, $alias));
         }
-        return $res->send($model->getSection($page->id, $id, false));
+        return $res->send($model->getSection($id, false));
     }
 
 
