@@ -1,4 +1,4 @@
-This **landing page builder** is created with [toolx php framework](https://github.com/woody180/toolx_php_framework_)
+This **landing page builder** is created with [toolx php framework](https://github.com/woody180/toolx_php_framework)
 
 # Basic instructions
 
