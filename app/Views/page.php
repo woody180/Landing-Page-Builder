@@ -1,5 +1,25 @@
 <?= $this->layout('layouts/template', ['title' => $page->title, 'theme' => 'uk-background-secondary']) ?>
 
+
+<?= $this->start('slideshow') ?>
+    
+    <section class="uk-section uk-margin-small-top ld-set-editable-icon ld-slideshow"
+        data-section-id="<?= $section->slideshow->id ?>"
+        data-background-color="<?= $section->slideshow->color ?>"
+        data-bg="<?= background($section, 'slideshow') ?>"
+    >
+
+        <div class="ld-slideshow-wrapper ld-element">
+            <?= elementEdit('slideshow') ?>
+
+            <?= $this->insert("elements/slideshow", ["section" => $section]); ?>
+
+        </div>
+    </section>
+<?= $this->stop() ?>
+
+
+
 <?= $this->start('mainSection') ?>
 
 <!--Stats section-->
@@ -20,7 +40,7 @@
 
 
 <?= $this->start('footer') ?>
-    <?php if ($section->footer->show): ?>
+    <?php if (property_exists($section, 'footer') && $section->footer->show): ?>
         <?= $this->insert('partials/footer', ['section' => $section]) ?>
     <?php endif; ?>
 <?= $this->stop(); ?>
