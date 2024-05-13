@@ -87,3 +87,68 @@ Let's say we created a slideshow section in the section table of the database. W
     <?= $this->insert('partials/gallery', ['section' => $section]) ?>
 <?php endif; ?>
 ```
+
+# Create dynamic element section
+We need to create three files. 
+
+1. **app/Views/elements/elementName.php** - for rendering element
+2. **app/Views/admin/elementEdit/elementName.php** - For element edit stuff
+3. **public/assets/js/classes/elementsEdit/ElementName.js** - This file must be a class and must be initialized from ``public/assets/js/bootstrap.js``
+
+### Import element section into view
+```
+<div class="ld-slider-wrapper ld-element">
+    <!-- Provide the section name as an argument, which you added as a title inside the database. -->
+    <?= elementEdit('slider') ?>
+
+    <div>
+        <?= $this->insert("elements/slider", ["section" => $section]) ?>
+    </div>
+</div>
+```
+
+
+Once js class is created paste boilerplate code inside it.
+```
+import SketchEngine from '../../classes/SketchEngine.js';
+
+export default class YourClassName extends SketchEngine {
+
+    constructor(baseurl)
+    {
+        super(); // Use parent contructor comming from extended class "SketchEngine"
+        this.variables.baseurl = baseurl;
+    }
+
+
+    variables = {};
+
+
+    execute = [];
+
+
+    selectors = {};
+
+
+    html = {}
+
+
+    catchDOM() {}
+
+
+    bindEvents() {}
+
+
+    functions = {}
+
+}
+
+```
+
+Inside selectors object, provide following key - value
+```
+selectors = {
+    openModalButton: '.ld-element-manage[data-type="elementName"]'
+};
+
+```
