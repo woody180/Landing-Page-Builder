@@ -1,5 +1,7 @@
 <?= $this->insert('partials/head', ['theme' => $theme ?? '']) ?>
 
+<?= $this->section('slideshow') ?>
+
 <?= $this->section('mainSection'); ?>
 
 <?= $this->section('footer'); ?>
