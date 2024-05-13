@@ -22,7 +22,7 @@ $router->get('load-editable-element/accordion', function($req, $res)
     // Get accordion items
     $faq = $model->getPageRelatedElement($page->id, 'faq', false);
 
-    if (empty($faq)) return $res->status(404)->send(['error' => 'Element not found.']);
+    if (empty($faq)) return $res->status(404)->send(['error' => 'Element edit file is not found.']);
     
     // Send items back to front
     return $res->render('admin/elementEdit/accordion', [
@@ -51,7 +51,7 @@ $router->get('load-editable-element/slider', function($req, $res)
     // Get accordion items
     $partners = $model->getPageRelatedElement($page->id, 'partners', false);
 
-    if (empty($partners)) return $res->status(404)->send(['error' => 'Element not found.']);
+    if (empty($partners)) return $res->status(404)->send(['error' => 'Element edit file is not found.']);
 
 
     // Send items back to front
