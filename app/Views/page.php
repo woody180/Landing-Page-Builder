@@ -3,7 +3,7 @@
 
 <?= $this->start('slideshow') ?>
     
-    <section class="uk-section uk-margin-small-top ld-set-editable-icon ld-slideshow"
+    <section class="uk-margin-small-top ld-set-editable-icon ld-slideshow"
         data-section-id="<?= $section->slideshow->id ?>"
         data-background-color="<?= $section->slideshow->color ?>"
         data-bg="<?= background($section, 'slideshow') ?>"
@@ -23,7 +23,7 @@
 <?= $this->start('mainSection') ?>
 
 <!--Stats section-->
-<section class="uk-section uk-margin-large-top">
+<section class="uk-section">
     <div class="uk-container min-height">
 
         <div class="ld-editable" alias="page.<?= $page->id ?>.body" params='{"type": "html"}'>
