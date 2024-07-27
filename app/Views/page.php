@@ -3,7 +3,7 @@
 
 <?= $this->start('slideshow') ?>
 
-    <?php if (property_exists($section, 'gallery') && $section->gallery->show): ?>
+    <?php if (property_exists($section, 'slideshow') && $section->slideshow->show): ?>
     
         <section class="uk-margin-small-top ld-set-editable-icon ld-slideshow"
             data-section-id="<?= $section->slideshow->id ?>"
