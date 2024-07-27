@@ -113,7 +113,8 @@ class Model_Section extends RedBean_SimpleModel {
         $sectionBody = R::findOne('section', 'id = ?', [$id]);
         $sectionBodyArray = json_decode($sectionBody->{$row}, true); // Array where you must apply changes.
 
-        $this->applyChanges($sectionBodyArray, $structure, json_decode($content));
+
+        $this->applyChanges($sectionBodyArray, $structure, $content);
 
         $sectionBody->{$row} = toJSON($sectionBodyArray);
         return R::store($sectionBody);
