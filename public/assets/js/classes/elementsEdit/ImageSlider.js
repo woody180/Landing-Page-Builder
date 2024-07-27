@@ -15,7 +15,9 @@ export default class YourClassName extends SketchEngine {
     execute = [];
 
 
-    selectors = {};
+    selectors = {
+        openModalButton: '.ld-element-manage[data-type="slideshow"]'
+    };
 
 
     html = {}
@@ -24,9 +26,34 @@ export default class YourClassName extends SketchEngine {
     catchDOM() {}
 
 
-    bindEvents() {}
+    bindEvents() {
+        this.lib(this.selectors.openModalButton).on('click', this.functions.openModal.bind(this));
+    }
 
 
-    functions = {}
+    functions = {
+        openModal(e)
+        {
+            e.preventDefault();
+            
+            const pageurl = document.getElementById('meta-location').getAttribute('content');
+            console.log(pageurl);
+
+            fetch(this.variables.baseurl + `/load-editable-element/slideshow?pageurl=${pageurl}`, {
+                method: 'get',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(view => view.text())
+            .then(view => {
+                const modal = UIkit.modal.dialog(view);
+                modal.$el.classList.add('uk-modal-container');
+                modal.$el.firstElementChild.classList.add('uk-modal-body');
+                modal.$el.firstElementChild.classList.add('uk-border-rounded');
+            });
+        },
+    }
 
 }

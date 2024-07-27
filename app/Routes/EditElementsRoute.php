@@ -62,4 +62,34 @@ $router->get('load-editable-element/slider', function($req, $res)
     
 }, ['Middlewares/checkAdmin', 'Middlewares/checkAjax']);
 
+
+
+
+// SLIDESHOW
+$router->get('load-editable-element/slideshow', function($req, $res)
+{
+    $model = initModel('section');
+
+    $pageurl = query('pageurl') === '/' ? '' : query('pageurl');
+
+    // Find page
+    $page = R::findOne('page', 'url = ?', [$pageurl]);
+
+    if (!$page) return $res->status(404)->send(['error' => 'Page not found']);
+    
+    // Get accordion items
+    $slideshow = $model->getPageRelatedElement($page->id, 'slideshow', false);
+
+    if (empty($slideshow)) return $res->status(404)->send(['error' => 'Element edit file is not found.']);
+
+
+    // // Send items back to front
+    // return $res->render('admin/elementEdit/logo-slider', [
+    //     "data" => json_decode($slideshow->body)->images,
+    //     "id" => $partners->id
+    // ]);
+
+    return $res->send([$slideshow]);
+    
+}, ['Middlewares/checkAdmin', 'Middlewares/checkAjax']);
         
