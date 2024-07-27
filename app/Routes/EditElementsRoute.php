@@ -83,11 +83,11 @@ $router->get('load-editable-element/slideshow', function($req, $res)
     if (empty($slideshow)) return $res->status(404)->send(['error' => 'Element edit file is not found.']);
 
 
-    // // Send items back to front
-    // return $res->render('admin/elementEdit/logo-slider', [
-    //     "data" => json_decode($slideshow->body)->images,
-    //     "id" => $partners->id
-    // ]);
+    // Send items back to front
+    return $res->render('admin/elementEdit/slideshow', [
+        "data" => json_decode($slideshow->body)->images,
+        "id" => $slideshow->id
+    ]);
 
     return $res->send([$slideshow]);
     

@@ -13,23 +13,24 @@ import SectionsController from '../js/classes/SectionsController.js';
 // Import editable element here
 import Accordion from '../js/classes/elementsEdit/Accordion.js';
 import Slider from '../js/classes/elementsEdit/Slider.js';
-import ImageSlider from '../js/classes/elementsEdit/ImageSlider.js';
+import Slideshow from '../js/classes/elementsEdit/Slideshow.js';
 
 
 new PagesController(baseurl);
 new UtilitiesController(baseurl);
 new UiController(baseurl);
-if (loggedin) new SettingsController(baseurl);
-if (loggedin) new SectionsController(baseurl);
 
 
 
 // Initialization of editable elements from here
 if (loggedin) {
+
+    new SettingsController(baseurl);
+    new SectionsController(baseurl);
     
     new Accordion(baseurl);
     new Slider(baseurl);
-    new ImageSlider(baseurl);
+    new Slideshow(baseurl);
     
 
     new FgTinyEditor({
