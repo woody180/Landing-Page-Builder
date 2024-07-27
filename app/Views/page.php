@@ -2,20 +2,24 @@
 
 
 <?= $this->start('slideshow') ?>
+
+    <?php if (property_exists($section, 'gallery') && $section->gallery->show): ?>
     
-    <section class="uk-margin-small-top ld-set-editable-icon ld-slideshow"
-        data-section-id="<?= $section->slideshow->id ?>"
-        data-background-color="<?= $section->slideshow->color ?>"
-        data-bg="<?= background($section, 'slideshow') ?>"
-    >
+        <section class="uk-margin-small-top ld-set-editable-icon ld-slideshow"
+            data-section-id="<?= $section->slideshow->id ?>"
+            data-background-color="<?= $section->slideshow->color ?>"
+            data-bg="<?= background($section, 'slideshow') ?>"
+        >
 
-        <div class="ld-slideshow-wrapper ld-element">
-            <?= elementEdit('slideshow') ?>
+            <div class="ld-slideshow-wrapper ld-element">
+                <?= elementEdit('slideshow') ?>
 
-            <?= $this->insert("elements/slideshow", ["section" => $section]); ?>
+                <?= $this->insert("elements/slideshow", ["section" => $section]); ?>
 
-        </div>
-    </section>
+            </div>
+        </section>
+
+    <?php endif; ?>
 <?= $this->stop() ?>
 
 
