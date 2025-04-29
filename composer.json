@@ -20,7 +20,7 @@
         "php": ">=7.4.0",
         "league/plates": "3.*",
         "gumlet/php-image-resize": "2.0.*",
-        "scssphp/scssphp": "^1.11.0",
+        "scssphp/scssphp": "^2.0.1",
         "phpmailer/phpmailer": "^6.8.0",
         "cocur/slugify": "^4.5"
     }

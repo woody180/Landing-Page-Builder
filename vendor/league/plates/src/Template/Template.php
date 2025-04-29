@@ -109,10 +109,10 @@ class Template
 
     /**
      * Assign or get template data.
-     * @param  array $data
-     * @return mixed
+     * @param array|null $data
+     * @return array|void
      */
-    public function data(array $data = null)
+    public function data(?array $data = null)
     {
         if (is_null($data)) {
             return $this->data;
@@ -361,7 +361,7 @@ class Template
         static $flags;
 
         if (!isset($flags)) {
-            $flags = ENT_QUOTES | (defined('ENT_SUBSTITUTE') ? ENT_SUBSTITUTE : 0);
+            $flags = ENT_QUOTES | ENT_SUBSTITUTE;
         }
 
         if ($functions) {

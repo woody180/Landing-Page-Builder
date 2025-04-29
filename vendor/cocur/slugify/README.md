@@ -17,7 +17,7 @@ Developed by [Florian Eckerstorfer](https://florian.ec) in Vienna, Europe with t
 ## Features
 
 -   Removes all special characters from a string.
--   Provides custom replacements for Arabic, Austrian, Azerbaijani, Brazilian Portuguese, Bulgarian, Burmese, Chinese, Croatian, Czech, Esperanto, Estonian, Finnish, French, Georgian, German, Greek, Hindi, Hungarian, Italian, Latvian, Lithuanian, Macedonian, Norwegian, Polish, Romanian, Russian, Serbian, Spanish, Swedish, Turkish, Ukrainian and Vietnamese special characters. Instead of removing these characters, Slugify approximates them (e.g., `ae` replaces `ä`).
+-   Provides custom replacements for Arabic, Austrian, Azerbaijani, Brazilian Portuguese, Bulgarian, Burmese, Chinese, Croatian, Czech, Esperanto, Estonian, Finnish, French, Georgian, German, Greek, Hindi, Hungarian, Italian, Latvian, Lithuanian, Macedonian, Norwegian, Polish, Romanian, Russian, Serbian, Spanish, Swedish, Turkish, Ukrainian, Vietnamese and Yiddish special characters. Instead of removing these characters, Slugify approximates them (e.g., `ae` replaces `ä`).
 -   No external dependencies.
 -   PSR-4 compatible.
 -   Compatible with PHP >= 8.
@@ -521,6 +521,12 @@ $slugify = $container->get(Slugify\SlugifyInterface::class);
 
 ## Change Log
 
+### Version 4.6.0 (10 September 2024)
+
+-   [#336](https://github.com/cocur/slugify/pull/336) Add Yiddish language ruleset ([yankl](https://github.com/yankl))
+-   [#340](https://github.com/cocur/slugify/pull/340) Fix for Symfony 7.1 (by [Evgeny1973](https://github.com/Evgeny1973))
+-   [#342](https://github.com/cocur/slugify/pull/342) Fix PHP 8.4 deprecation about implicit null arguments (by [shyim](https://github.com/shyim))
+
 ### Version 4.5.1 (16 September 2023)
 
 -   Drop support for PHP 7 and fix version constraints
@@ -529,12 +535,18 @@ $slugify = $container->get(Slugify\SlugifyInterface::class);
 ### Version 4.5 (16 September 2023)
 
 -   [#327](https://github.com/cocur/slugify/pull/327) Add Korean to default ruleset
--   Removed since it breaks compatibility with PHP 7
+-   Replaced by v4.5.1 since this release breaks compatibility with PHP 7
+
+### Version 4.4.1 (17 September 2023)
+
+-   Remove PHP 7 from compatibility list
+-   Replaces v4.4.0
 
 ### Version 4.4 (5 August 2023)
 
 -   [#320](https://github.com/cocur/slugify/pull/320) Add Korean (by [MrMooky](https://github.com/MrMooky))
 -   [#322](https://github.com/cocur/slugify/pull/322) Add types to avoid PHP 8.2 deprecation warning (by [antoniovj1](https://github.com/antoniovj1))
+-   Replaced by v4.4.1 since this release broke compatibility with PHP 7
 
 ### Version 4.3 (7 December 2022)
 

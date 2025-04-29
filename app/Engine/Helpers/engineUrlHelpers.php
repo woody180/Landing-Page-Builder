@@ -46,35 +46,35 @@ function urlSegments($index = null, bool $removeQuery = false) {
 }
 
 
-function baseUrl(string $url = null, $withLanguageCode = false) {
-    
+function baseUrl(string $url = '', $withLanguageCode = false) {
+
     if (MULTILINGUAL) $withLanguageCode = true;
-    
+
     if (MULTILINGUAL && $withLanguageCode) {
-        if ($url)
+        if (!empty($url))
             return URLROOT . '/' . \App\Engine\Libraries\Languages::active() . '/' . $url;
         else
             return URLROOT . '/' . \App\Engine\Libraries\Languages::active();
     }
-    
-    if ($url)
+
+    if (!empty($url))
         return URLROOT . '/' . $url;
     else
         return URLROOT;
 }
 
 
-function assetsUrl(string $url = null) {
+function assetsUrl(string $url = '') {
 
-    $publicUrl = $url ? '/' . $url : '';
+    $publicUrl = $url !== '' ? '/' . $url : '';
     return PUBLIC_DIR . $publicUrl;
 }
 
 
-function query(string $key = null) {
+function query(string $key = '') {
     // Query string
     preg_match_all('/[\?](.*)[\/]?+/', CURRENT_URL, $queryString);
-    $queryStr = null;
+    $queryStr = ''; // can't be null in php 8.4.1
 
     if ( isset($queryString[0]) && isset($queryString[0][0]) ) {
         parse_str($queryString[1][0], $queryArr);
@@ -225,5 +225,43 @@ function abort(array $params = ["code" => 404, "url" => NULL, "text" => NULL]) {
         require_once APPROOT . "/views/{$params['url']}.php";
         die();
     }
+
+}
+
+
+
+function redirect($url = null, $code = 302) {
+    if ($url === null) $url = baseUrl();
+    return header("Location: " . baseUrl($url), true, $code);
+}
+
+
+function url_to(string $controller_method, ...$segmetns) {
+
+    $segments = $segmetns;
+
+    $routes = \App\Engine\Libraries\Router::getRoutes();
+    $url = null;
+    $patterns = [
+        '(:any)', '(:num)', '(:alpha)', '(:alphanum)', '(:segment)', '(:continue)',
+    ];
+
+    foreach ($routes['get'] as $route => $value) {
+        
+        if ($value[0] === $controller_method) {
+
+            foreach ($patterns as $pattern) {
+                if (strpos($route, $pattern)) {
+                    $route = preg_replace('/' . preg_quote($pattern, '/') . '/', array_pop($segments), $route, 1);
+                }
+            }
+
+            $url = $route;
+            break;
+        }
+    }
+
+    if (!is_null($url)) return baseUrl($url);
+    return null;
 
 }

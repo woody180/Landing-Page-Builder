@@ -108,7 +108,7 @@ trait RequestTrait {
 
     
 
-    public function body(string $index = null) {
+    public function body(string $index = '') {
         
         // Request data
         $reqString = file_get_contents('php://input');
@@ -126,8 +126,7 @@ trait RequestTrait {
         foreach ($_POST as $key => $val)
             $data[$key] = $val;
 
-
-        if ($index) return $data[$index] ?? null;
+        if ($index !== '') return $data[$index] ?? null;
         
         $this->data = $data;
         unset($data['csrf_token']);
@@ -159,10 +158,10 @@ trait RequestTrait {
 
 
     // Get query
-    public function query(string $key = null) {
+    public function query(string $key = '') {
         // Query string
         preg_match_all('/[\?](.*)[\/]?+/', CURRENT_URL, $queryString);
-        $queryStr = null;
+        $queryStr = ''; // can't be null in php 8.4.1
 
         if ( isset($queryString[0]) && isset($queryString[0][0]) ) {
             parse_str($queryString[1][0], $queryArr);
@@ -202,9 +201,9 @@ trait RequestTrait {
 
 
     // Get files
-    public function files(string $key = null) {
+    public function files(string $key = '') {
         if ($key) {
-            $this->file = $_FILES[$key] ?? null;
+            $this->file = $_FILES[$key] ?? [];
             return $this;
         }
         $this->file = $_FILES;
@@ -212,13 +211,13 @@ trait RequestTrait {
     }
 
 
-    public function show(string $attr = null) {
-        if ($attr) return $this->file[$attr] ?? null;
+    public function show(string $attr = '') {
+        if ($attr !== '') return $this->file[$attr] ?? null;
         return $this->file;
     }
 
 
-    public function upload(string $filePath, string $fileName = null) {
+    public function upload(string $filePath, string $fileName = '') {
 
         // If multiple files
         if (isset($this->file['name']) && is_array($this->file['name'])) {
@@ -249,7 +248,6 @@ trait RequestTrait {
             return $newFile;
         }
     }
-
 
     private function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

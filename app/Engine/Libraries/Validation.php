@@ -18,6 +18,7 @@
  * required
  * valid_input
  * string
+ * phone
  * 
  * To make it work
  * $valiate = $validation
@@ -212,6 +213,24 @@ class Validation {
             }
         }
         
+
+        
+        if ($param === 'phone') {
+            $pattern = "/^\+?[1-9]\d{1,14}$|^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/";
+            if (!empty($bodyVal)) {
+                if (!is_array($bodyVal)) {
+                    if (!preg_match($pattern, $bodyVal))
+                    $this->errors[$name][] = "Invalid $readableName number!";
+            } else {
+                    foreach ($bodyVal as $val) {
+                        if (!preg_match($pattern, $val))
+                            $this->errors[$name][] = "Invalid $readableName number!";
+                    }
+                }
+            }
+        }
+        
+
         
         if ($param === 'valid_url') {
             
@@ -300,11 +319,11 @@ class Validation {
             
             if (!empty($bodyVal)) {
                 if (!is_array($bodyVal)) {
-                    if ( !preg_match('/^[a-zA-Zა-ჰа-яА-Я()]+$/', $bodyVal))
+                    if ( !preg_match('/^[\p{L}]+$/u', $bodyVal))
                         $this->errors[$name][] = "$readableName - Only alphabetical characters are allowed!";
                 } else {
                     foreach ($bodyVal as $val) {
-                        if ( !preg_match('/^[a-zA-Zა-ჰа-яА-Я()]+$/', $val))
+                        if ( !preg_match('/^[\p{L}]+$/u', $val))
                             $this->errors[$name][] = "$readableName - Only alphabetical characters are allowed!";    
                     }
                 }
@@ -316,11 +335,11 @@ class Validation {
             
             if (!empty($bodyVal)) {
                 if (!is_array($bodyVal)) {
-                    if ( !preg_match('/^[\s a-zA-Zა-ჰа-яА-Я1-9()]+$/', $bodyVal))
+                    if ( !preg_match('/^[\p{L}\p{N}\s]+$/u', $bodyVal))
                         $this->errors[$name][] = "$readableName - Only alphabetical characters are allowed!"; 
                 } else {
                     foreach ($bodyVal as $val) {
-                        if ( !preg_match('/^[\s a-zA-Zა-ჰа-яА-Я1-9()]+$/', $val))
+                        if ( !preg_match('/^[\p{L}\p{N}\s]+$/u', $val))
                             $this->errors[$name][] = "$readableName - Only alphabetical characters are allowed!";
                     }
                 }
@@ -331,11 +350,11 @@ class Validation {
             
             if (!empty($bodyVal)) {
                 if (!is_array($bodyVal)) {
-                    if ( !preg_match('/^[\s a-zA-Zა-ჰа-яА-Я()]+$/', $bodyVal))
+                    if ( !preg_match('/^[\p{L}\s]+$/u', $bodyVal))
                         $this->errors[$name][] = "$readableName - Only alphabetical characters and spaces are allowed!";
                 } else {
                     foreach ($bodyVal as $val) {
-                        if ( !preg_match('/^[\s a-zA-Zა-ჰа-яА-Я()]+$/', $val))
+                        if ( !preg_match('/^[\p{L}\s]+$/u', $val))
                             $this->errors[$name][] = "$readableName - Only alphabetical characters and spaces are allowed!";
                     }
                 }
@@ -348,11 +367,11 @@ class Validation {
             
             if (!empty($bodyVal)) {
                 if (!is_array($bodyVal)) {
-                    if (!preg_match('/^[a-zA-Zა-ჰа-яА-Я0-9()]+$/', $bodyVal))
+                    if (!preg_match('/^[\p{L}\p{N}]+$/u', $bodyVal))
                         $this->errors[$name][] = "$readableName - Only alphabetical and numeric characters are allowed!";
                 } else {
                     foreach ($bodyVal as $val) {
-                        if (!preg_match('/^[a-zA-Zა-ჰа-яА-Я0-9()]+$/', $val))
+                        if (!preg_match('/^[\p{L}\p{N}]+$/u', $val))
                             $this->errors[$name][] = "$readableName - Only alphabetical and numeric characters are allowed!";
                     }
                 }
@@ -364,11 +383,11 @@ class Validation {
             
             if (!empty($bodyVal)) {
                 if (!is_array($bodyVal)) {
-                    if (!preg_match('/^[\s a-zA-Zა-ჰа-яА-Я0-9()]+$/', $bodyVal))
+                    if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $bodyVal))
                         $this->errors[$name][] = "$readableName - Only alphabetical and numeric characters are allowed!";
                 } else {
                     foreach ($bodyVal as $val) {
-                        if (!preg_match('/^[\s a-zA-Zა-ჰа-яА-Я0-9()]+$/', $val))
+                        if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $val))
                             $this->errors[$name][] = "$readableName - Only alphabetical and numeric characters are allowed!";
                     }
                 }

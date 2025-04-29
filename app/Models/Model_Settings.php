@@ -33,7 +33,7 @@ class Model_Settings extends RedBean_SimpleModel {
     }
     
     
-    public function getSettings(string $param = null) {
+    public function getSettings(string $param) {
         
         if (is_null($param))
             return R::findOne('settings');
